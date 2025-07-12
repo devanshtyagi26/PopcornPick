@@ -25,10 +25,12 @@ import {
 } from "@/components/ui/command";
 import axios from "axios";
 import { NextResponse } from "next/server";
+import MovieCard from "./MovieCard";
 
 export default function MovieBox() {
   const [movieOptions, setMovieOptions] = useState([]);
   const [fetchedMovieOptions, setFetchedMovieOptions] = useState([]);
+  const PosterURI = process.env.NEXT_PUBLIC_API_KEY;
 
   useEffect(() => {
     async function fetchMovies() {
@@ -38,11 +40,7 @@ export default function MovieBox() {
         );
         setMovieOptions(res.data);
       } catch (error) {
-        console.error(error);
-        return NextResponse(
-          { error: error, message: "Movies not Fetched" },
-          { status: 400 }
-        );
+        console.error("Error fetching movies:", error);
       }
     }
 
@@ -56,22 +54,36 @@ export default function MovieBox() {
       );
 
       setFetchedMovieOptions(res.data);
+
+      let posters = await Promise.all(
+        res.data.map((movie) => fetchPoster(movie.id))
+      );
+
+      setPosterUrls(posters);
       setOutput(true);
     } catch (error) {
-      console.error(error);
-      return new NextResponse(
-        { error: error, message: "Movies not Generated" },
-        { status: 400 }
-      );
+      console.error("Error fetching movies:", error);
     }
   }
 
+  async function fetchPoster(movie_id) {
+    try {
+      const res = await axios.get(
+        `https://api.themoviedb.org/3/movie/${movie_id}?api_key=${PosterURI}`
+      );
+      console.log(res.data);
+      return "https://image.tmdb.org/t/p/w500/" + res.data.poster_path;
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+    }
+  }
   const [selectedMovie, setSelectedMovie] = useState("");
   const [open, setOpen] = useState(false);
   const [output, setOutput] = useState(false);
+  const [posterUrls, setPosterUrls] = useState([]);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 w-[100%] h-[100%] justify-center items-center">
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>PopcornPick – Your Movie Matchmaker</CardTitle>
@@ -134,35 +146,30 @@ export default function MovieBox() {
               }
             }}
           >
-            Search
+            Recommend
           </Button>
         </CardFooter>
       </Card>
-      <Card className="w-[350px]">
+      <Card className="w-fit h-fit px-2 min-w-[25rem]">
         <CardHeader>
-          {output ? (
-            fetchedMovieOptions.length > 0 ? (
-              <>
-                <CardTitle>AI Recommendation</CardTitle>
-                <CardDescription>
-                  <ol>
-                    {fetchedMovieOptions.map((movie, id) => {
-                      return (
-                        <li key={id}>
-                          {id + 1}. {movie}
-                        </li>
-                      );
-                    })}
-                  </ol>
-                </CardDescription>
-              </>
-            ) : (
-              <CardDescription>No Movie Found...</CardDescription>
-            )
-          ) : (
-            <CardDescription>Choose a movie...</CardDescription>
-          )}
+          <CardTitle>AI Recommendation</CardTitle>
         </CardHeader>
+        {output ? (
+          fetchedMovieOptions.length > 0 ? (
+            <>
+              <CardDescription className="flex justify-center items-center">
+                <MovieCard
+                  fetchedMovieOptions={fetchedMovieOptions}
+                  posterUrls={posterUrls}
+                />
+              </CardDescription>
+            </>
+          ) : (
+            <CardDescription className="flex justify-center items-center">No Movie Found...</CardDescription>
+          )
+        ) : (
+          <CardDescription className="flex justify-center items-center">Choose a movie...</CardDescription>
+        )}
       </Card>
     </div>
   );
