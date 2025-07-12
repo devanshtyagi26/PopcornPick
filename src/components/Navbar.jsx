@@ -84,23 +84,21 @@ export default function Navbar() {
               "
             >
               <nav className="flex flex-col items-center gap-8 mt-20">
+                <Link href="/" className="text-sm font-medium hover:underline">
+                  Movies
+                </Link>
                 <Link
-                  href="/movies"
+                  href="https://www.linkedin.com/posts/tyagi-devansh_tensorflowjs-machinelearning-neuralnetworks-activity-7339620891867172865-I3LN"
+                  target="_blank"
                   className="text-sm font-medium hover:underline"
                 >
-                  Movies
+                  Demo
                 </Link>
                 <Link
                   href="/about"
                   className="text-sm font-medium hover:underline"
                 >
                   About
-                </Link>
-                <Link
-                  href="/contact"
-                  className="text-sm font-medium hover:underline"
-                >
-                  Contact
                 </Link>
 
                 {/* Mobile ModeToggle */}

@@ -7,32 +7,52 @@ function MovieCard({ fetchedMovieOptions, posterUrls }) {
   console.log("Options", fetchedMovieOptions, "Urls", posterUrls);
 
   if (fetchedMovieOptions.length !== posterUrls.length) {
-    return <div>Error: poster doesn't match!</div>;
+    return <div className="text-red-500">Error: poster doesn't match!</div>;
   }
+
   return (
-    <div className="grid-rows-1 grid grid-cols-5 gap-2 w-fit h-fit">
+    <div
+      className="
+        grid
+        grid-cols-2
+        sm:grid-cols-2
+        md:grid-cols-3
+        lg:grid-cols-4
+        xl:grid-cols-5
+        gap-4
+        p-4
+        place-items-baseline
+      "
+    >
       {fetchedMovieOptions.map((movie, index) => (
-        <div
+        <Card
           key={movie.id || index}
-          className="flex flex-col gap-2 w-fit h-fit"
+          className="
+            w-[10.5rem]    /* default on mobile */
+            sm:w-[9rem]
+            md:w-[10rem]
+            lg:w-[11rem]
+            xl:w-[13rem]
+            p-2
+          "
         >
-          <Card className="w-[13rem]">
-            <CardContent>
-              {posterUrls[index] ? (
-                <AspectRatio ratio={3 / 4}>
-                  <Image
-                    src={posterUrls[index]}
-                    alt={movie.title}
-                    fill
-                    sizes="208px"
-                    className="rounded-md object-cover"
-                  />
-                </AspectRatio>
-              ) : null}
-            </CardContent>
-            <CardFooter>{movie.title}</CardFooter>
-          </Card>
-        </div>
+          <CardContent className="px-0">
+            {posterUrls[index] ? (
+              <AspectRatio ratio={3 / 4}>
+                <Image
+                  src={posterUrls[index]}
+                  alt={movie.title}
+                  fill
+                  sizes="418px"
+                  className="rounded-md object-cover"
+                />
+              </AspectRatio>
+            ) : null}
+          </CardContent>
+          <CardFooter className="text-center text-xs sm:text-sm font-medium self-center">
+            {movie.title}
+          </CardFooter>
+        </Card>
       ))}
     </div>
   );

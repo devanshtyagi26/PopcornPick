@@ -31,6 +31,7 @@ export default function MovieBox() {
   const [movieOptions, setMovieOptions] = useState([]);
   const [fetchedMovieOptions, setFetchedMovieOptions] = useState([]);
   const PosterURI = process.env.NEXT_PUBLIC_API_KEY;
+  const BackendLink = process.env.NEXT_PUBLIC_BACKEND_LINK;
   const [selectedMovie, setSelectedMovie] = useState("");
   const [open, setOpen] = useState(false);
   const [output, setOutput] = useState(false);
@@ -39,9 +40,7 @@ export default function MovieBox() {
   useEffect(() => {
     async function fetchMovies() {
       try {
-        const res = await axios.get(
-          "https://popcornpick-backend.onrender.com/movies"
-        );
+        const res = await axios.get(`${BackendLink}/movies`);
         setMovieOptions(res.data);
       } catch (error) {
         console.error("Error fetching movies:", error);
@@ -53,9 +52,7 @@ export default function MovieBox() {
 
   async function recommendMovies() {
     try {
-      const res = await axios.get(
-        `https://popcornpick-backend.onrender.com/movies/${selectedMovie}`
-      );
+      const res = await axios.get(`${BackendLink}/movies/${selectedMovie}`);
 
       setFetchedMovieOptions(res.data);
 
@@ -165,10 +162,14 @@ export default function MovieBox() {
               </CardDescription>
             </>
           ) : (
-            <CardDescription className="flex justify-center items-center">No Movie Found...</CardDescription>
+            <CardDescription className="flex justify-center items-center">
+              No Movie Found...
+            </CardDescription>
           )
         ) : (
-          <CardDescription className="flex justify-center items-center">Choose a movie...</CardDescription>
+          <CardDescription className="flex justify-center items-center">
+            Choose a movie...
+          </CardDescription>
         )}
       </Card>
     </div>
