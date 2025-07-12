@@ -1,7 +1,9 @@
+import MovieBox from "@/components/MovieBox";
+
 export default function Home() {
   return (
     <>
-      <p>hi</p>
+      <MovieBox />
     </>
   );
 }
