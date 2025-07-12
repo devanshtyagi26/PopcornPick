@@ -4,25 +4,33 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Link from "next/link";
 import { ModeToggle } from "./ModeToggle";
+import { Popcorn } from "lucide-react";
 
 export default function Navbar() {
   return (
     <header className="w-[60%] rounded-b-2xl px-4 py-3 dark:bg-card bg-card border-b shadow-sm">
       <div className="flex items-center justify-between max-w-6xl mx-auto">
-        <Link href="/" className="text-xl font-semibold">
-          PopcornPick
+        <Link
+          href="/"
+          className="text-xl flex justify-center items-center gap-1 font-semibold"
+        >
+          <Popcorn /> PopcornPick
         </Link>
 
         {/* Desktop nav */}
         <nav className="hidden md:flex gap-6">
-          <Link href="/movies" className="text-sm font-medium hover:underline">
+          <Link href="/" className="text-sm font-medium hover:underline">
             Movies
+          </Link>
+          <Link
+            href="https://www.linkedin.com/posts/tyagi-devansh_tensorflowjs-machinelearning-neuralnetworks-activity-7339620891867172865-I3LN?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEaIw4wB7K8nr6GbKnpzS5_wW9Wb4yeCgAQ"
+            target="_blank"
+            className="text-sm font-medium hover:underline"
+          >
+            Demo
           </Link>
           <Link href="/about" className="text-sm font-medium hover:underline">
             About
-          </Link>
-          <Link href="/contact" className="text-sm font-medium hover:underline">
-            Contact
           </Link>
         </nav>
 

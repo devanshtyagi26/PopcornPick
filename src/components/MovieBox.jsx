@@ -31,6 +31,10 @@ export default function MovieBox() {
   const [movieOptions, setMovieOptions] = useState([]);
   const [fetchedMovieOptions, setFetchedMovieOptions] = useState([]);
   const PosterURI = process.env.NEXT_PUBLIC_API_KEY;
+  const [selectedMovie, setSelectedMovie] = useState("");
+  const [open, setOpen] = useState(false);
+  const [output, setOutput] = useState(false);
+  const [posterUrls, setPosterUrls] = useState([]);
 
   useEffect(() => {
     async function fetchMovies() {
@@ -77,10 +81,6 @@ export default function MovieBox() {
       console.error("Error fetching movies:", error);
     }
   }
-  const [selectedMovie, setSelectedMovie] = useState("");
-  const [open, setOpen] = useState(false);
-  const [output, setOutput] = useState(false);
-  const [posterUrls, setPosterUrls] = useState([]);
 
   return (
     <div className="flex flex-col gap-2 w-[100%] h-[100%] justify-center items-center">
