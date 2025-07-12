@@ -35,7 +35,7 @@ export default function Navbar() {
             Movies
           </Link>
           <Link
-            href="https://www.linkedin.com/posts/tyagi-devansh_tensorflowjs-machinelearning-neuralnetworks-activity-7339620891867172865-I3LN"
+            href="https://www.linkedin.com/posts/tyagi-devansh_onedaybuild-machinelearning-fastapi-activity-7349861243572133889-l4qn"
             target="_blank"
             className="text-sm font-medium hover:underline"
           >
