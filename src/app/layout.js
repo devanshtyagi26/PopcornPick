@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
     <>
       <html lang="en" suppressHydrationWarning>
         <head />
-        <body className="flex flex-col items-center">
+        <body className="flex flex-col items-center h-[100vh]">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
