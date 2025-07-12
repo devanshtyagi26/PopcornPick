@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,26 +23,31 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-
-function getMovies() {
-  try {
-    // const res = axios.get
-  } catch (error) {
-    
-  }
-}
-
-const movieOptions = [
-  "Inception",
-  "Interstellar",
-  "The Dark Knight",
-  "Avengers: Endgame",
-  "Titanic",
-  "Shutter Island",
-  "Joker",
-];
+import axios from "axios";
+import { NextResponse } from "next/server";
 
 export default function MovieBox() {
+  const [movieOptions, setMovieOptions] = useState([]);
+
+  useEffect(() => {
+    async function fetchMovies() {
+      try {
+        const res = await axios.get(
+          "https://popcornpick-backend.onrender.com/movies"
+        );
+        setMovieOptions(res.data);
+      } catch (error) {
+        console.error(error);
+        return NextResponse(
+          { error: error, message: "Movies not Fetched" },
+          { status: 400 }
+        );
+      }
+    }
+
+    fetchMovies();
+  }, []);
+
   const [selectedMovie, setSelectedMovie] = useState("");
   const [open, setOpen] = useState(false);
 
@@ -71,23 +76,27 @@ export default function MovieBox() {
                     {selectedMovie || "Search or select a movie"}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-full p-0">
+                <PopoverContent className="w-full p-0 max-h-90 overflow-y-auto">
                   <Command>
                     <CommandInput placeholder="Search movies..." />
                     <CommandEmpty>No movie found.</CommandEmpty>
                     <CommandGroup>
-                      {movieOptions.map((movie) => (
-                        <CommandItem
-                          key={movie}
-                          value={movie}
-                          onSelect={(currentValue) => {
-                            setSelectedMovie(currentValue);
-                            setOpen(false);
-                          }}
-                        >
-                          {movie}
-                        </CommandItem>
-                      ))}
+                      {movieOptions.length > 0 ? (
+                        movieOptions.map((movie, index) => (
+                          <CommandItem
+                            key={`${movie}-${index}`}
+                            value={movie}
+                            onSelect={(currentValue) => {
+                              setSelectedMovie(currentValue);
+                              setOpen(false);
+                            }}
+                          >
+                            {movie}
+                          </CommandItem>
+                        ))
+                      ) : (
+                        <CommandEmpty>Loading movies...</CommandEmpty>
+                      )}
                     </CommandGroup>
                   </Command>
                 </PopoverContent>
