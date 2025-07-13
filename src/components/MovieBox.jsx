@@ -147,18 +147,21 @@ export default function MovieBox() {
           </Button>
         </CardFooter>
       </Card>
-      <Card className="w-fit h-fit px-2 min-w-[25rem]">
+      <Card className="w-fit h-fit px-5 min-w-[22rem]">
         <CardHeader>
           <CardTitle>AI Recommendation</CardTitle>
         </CardHeader>
         {output ? (
           fetchedMovieOptions.length > 0 ? (
             <>
-              <CardDescription className="flex justify-center items-center">
-                <MovieCard
+              <CardDescription className="flex flex-col pl-5 justify-center gap-[0.3rem] items-baseline">
+                {fetchedMovieOptions.map((movie, index) => (
+                  <p key={movie.id}>{movie.title}</p>
+                ))}
+                {/* <MovieCard
                   fetchedMovieOptions={fetchedMovieOptions}
                   posterUrls={posterUrls}
-                />
+                /> */}
               </CardDescription>
             </>
           ) : (
