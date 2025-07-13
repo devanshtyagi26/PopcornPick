@@ -156,7 +156,9 @@ export default function MovieBox() {
             <>
               <CardDescription className="flex flex-col pl-5 justify-center gap-[0.6rem] items-baseline">
                 {fetchedMovieOptions.map((movie, index) => (
-                  <p key={movie.id}>{index}. {movie.title}</p>
+                  <p key={movie.id}>
+                    {index + 1}. {movie.title}
+                  </p>
                 ))}
                 {/* <MovieCard
                   fetchedMovieOptions={fetchedMovieOptions}
