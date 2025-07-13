@@ -56,11 +56,11 @@ export default function MovieBox() {
 
       setFetchedMovieOptions(res.data);
 
-      let posters = await Promise.all(
-        res.data.map((movie) => fetchPoster(movie.id))
-      );
+      // let posters = await Promise.all(
+      //   res.data.map((movie) => fetchPoster(movie.id))
+      // );
 
-      setPosterUrls(posters);
+      // setPosterUrls(posters);
       setOutput(true);
     } catch (error) {
       console.error("Error fetching movies:", error);
