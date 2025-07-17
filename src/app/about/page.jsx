@@ -79,42 +79,38 @@ export default function AboutPage() {
           help movie lovers discover hidden gems effortlessly.
         </p>
         <div className="flex space-x-4">
-          <Button
-            variant="outline"
-            size="sm"
-            as="a"
-            href="https://github.com/devanshtyagi26"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-            className="flex items-center space-x-2"
-          >
-            <Github size={16} />
-            <span>GitHub</span>
+          <Button asChild variant="outline" size="sm">
+            <a
+              href="https://github.com/devanshtyagi26"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2"
+            >
+              <Github size={16} />
+              <span>GitHub</span>
+            </a>
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            as="a"
-            href="https://www.linkedin.com/in/tyagi-devansh"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn"
-            className="flex items-center space-x-2"
-          >
-            <Linkedin size={16} />
-            <span>LinkedIn</span>
+
+          <Button asChild variant="outline" size="sm">
+            <a
+              href="https://www.linkedin.com/in/tyagi-devansh"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2"
+            >
+              <Linkedin size={16} />
+              <span>LinkedIn</span>
+            </a>
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            as="a"
-            href="mailto:johndoe@example.com"
-            aria-label="Email"
-            className="flex items-center space-x-2"
-          >
-            <Mail size={16} />
-            <span>Email</span>
+
+          <Button asChild variant="outline" size="sm">
+            <a
+              href="mailto:johndoe@example.com"
+              className="flex items-center space-x-2"
+            >
+              <Mail size={16} />
+              <span>Email</span>
+            </a>
           </Button>
         </div>
       </section>
