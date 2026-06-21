@@ -24,6 +24,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import axios from "axios";
+import MovieCard from "./MovieCard";
 
 export default function MovieBox() {
   const [movieOptions, setMovieOptions] = useState([]);

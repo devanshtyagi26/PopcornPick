@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 export async function GET() {
   const BackendLink = process.env.NEXT_PUBLIC_BACKEND_LINK;
   try {
-    // 🚀 Change 'popcornpick-backend' to your exact Dokploy service name
     const response = await fetch(`${BackendLink}/movies`, {
       method: "GET",
     });
