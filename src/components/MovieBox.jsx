@@ -24,63 +24,47 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import axios from "axios";
-import { NextResponse } from "next/server";
-import MovieCard from "./MovieCard";
 
 export default function MovieBox() {
   const [movieOptions, setMovieOptions] = useState([]);
   const [fetchedMovieOptions, setFetchedMovieOptions] = useState([]);
-  const PosterURI = process.env.NEXT_PUBLIC_API_KEY;
-  const BackendLink = process.env.NEXT_PUBLIC_BACKEND_LINK;
   const [selectedMovie, setSelectedMovie] = useState("");
   const [open, setOpen] = useState(false);
   const [output, setOutput] = useState(false);
-  const [posterUrls, setPosterUrls] = useState([]);
+  const [loading, setLoading] = useState(false);
 
+  // Fetch movie drop-down list via local secure API route
   useEffect(() => {
     async function fetchMovies() {
       try {
-        const res = await axios.get(`${BackendLink}/movies`);
+        const res = await axios.get("/api/movies");
         setMovieOptions(res.data);
       } catch (error) {
-        console.error("Error fetching movies:", error);
+        console.error("Error fetching movies via proxy:", error);
       }
     }
-
     fetchMovies();
   }, []);
 
+  // Fetch Recommendations via dynamic local secure API route
   async function recommendMovies() {
-    try {
-      const res = await axios.get(`${BackendLink}/movies/${selectedMovie}`);
-
-      setFetchedMovieOptions(res.data);
-
-      // let posters = await Promise.all(
-      //   res.data.map((movie) => fetchPoster(movie.id))
-      // );
-
-      // setPosterUrls(posters);
-      setOutput(true);
-    } catch (error) {
-      console.error("Error fetching movies:", error);
-    }
-  }
-
-  async function fetchPoster(movie_id) {
+    if (!selectedMovie) return;
+    setLoading(true);
     try {
       const res = await axios.get(
-        `https://api.themoviedb.org/3/movie/${movie_id}?api_key=${PosterURI}`
+        `/api/movies/${encodeURIComponent(selectedMovie)}`,
       );
-      console.log(res.data);
-      return "https://image.tmdb.org/t/p/w500/" + res.data.poster_path;
+      setFetchedMovieOptions(res.data);
+      setOutput(true);
     } catch (error) {
-      console.error("Error fetching movies:", error);
+      console.error("Error getting recommendations via proxy:", error);
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
-    <div className="flex flex-col gap-2 w-[100%] h-[100%] justify-center items-center">
+    <div className="flex flex-col gap-2 w-full h-full justify-center items-center">
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>PopcornPick – Your Movie Matchmaker</CardTitle>
@@ -90,10 +74,9 @@ export default function MovieBox() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={(e) => e.preventDefault()}>
             <div className="grid w-full items-center gap-4">
-              {/* Searchable Dropdown using Command Menu */}
-              <div className="flex flex-col w-[100%] space-y-1.5">
+              <div className="flex flex-col w-full space-y-1.5">
                 <Label>Select a Movie</Label>
                 <Popover open={open} onOpenChange={setOpen}>
                   <PopoverTrigger asChild>
@@ -124,7 +107,9 @@ export default function MovieBox() {
                             </CommandItem>
                           ))
                         ) : (
-                          <CommandEmpty>Loading movies...</CommandEmpty>
+                          <div className="p-4 text-sm text-muted-foreground text-center">
+                            Loading movie options...
+                          </div>
                         )}
                       </CommandGroup>
                     </Command>
@@ -136,45 +121,36 @@ export default function MovieBox() {
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button
-            disabled={selectedMovie === ""}
-            onClick={() => {
-              if (selectedMovie !== "") {
-                recommendMovies();
-              }
-            }}
+            disabled={selectedMovie === "" || loading}
+            onClick={recommendMovies}
           >
-            Recommend
+            {loading ? "Analyzing..." : "Recommend"}
           </Button>
         </CardFooter>
       </Card>
+
       <Card className="w-fit h-fit px-5 min-w-[22rem]">
         <CardHeader>
           <CardTitle>AI Recommendation</CardTitle>
         </CardHeader>
         {output ? (
           fetchedMovieOptions.length > 0 ? (
-            <>
-              <CardDescription className="flex flex-col pl-5 justify-center gap-[0.6rem] items-baseline">
-                {fetchedMovieOptions.map((movie, index) => (
-                  <p key={movie.id}>
-                    {index + 1}. {movie.title}
-                  </p>
-                ))}
-                {/* <MovieCard
-                  fetchedMovieOptions={fetchedMovieOptions}
-                  posterUrls={posterUrls}
-                /> */}
-              </CardDescription>
-            </>
+            <CardContent className="flex flex-col pl-5 justify-center gap-2 items-baseline pb-6">
+              {fetchedMovieOptions.map((movie, index) => (
+                <p key={movie.id || index} className="text-sm font-medium">
+                  {index + 1}. {movie.title || movie}
+                </p>
+              ))}
+            </CardContent>
           ) : (
-            <CardDescription className="flex justify-center items-center">
+            <CardContent className="flex justify-center items-center text-sm text-muted-foreground pb-6">
               No Movie Found...
-            </CardDescription>
+            </CardContent>
           )
         ) : (
-          <CardDescription className="flex justify-center items-center">
+          <CardContent className="flex justify-center items-center text-sm text-muted-foreground pb-6">
             Choose a movie...
-          </CardDescription>
+          </CardContent>
         )}
       </Card>
     </div>
